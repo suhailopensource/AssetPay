@@ -1,10 +1,9 @@
-// components/CreateAssetModal.tsx
 "use client";
 
 import { useState } from "react";
 import ProductModal from "./ProductModal";
 
-export default function CreateAssetModal() {
+export default function CreateAssetModal({ onCreated }: { onCreated: () => void }) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -28,7 +27,7 @@ export default function CreateAssetModal() {
                         <ProductModal
                             onCreated={() => {
                                 setOpen(false);
-                                // TODO: optionally refetch product list
+                                onCreated(); // refresh product list
                             }}
                         />
                     </div>

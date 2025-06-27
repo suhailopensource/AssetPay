@@ -1,6 +1,6 @@
+// components/ClientProductList.tsx
 "use client";
 
-import { useState } from "react";
 import ShareLinkInput from "./ShareLinkInput";
 import DeleteButton from "./DeleteButton";
 
@@ -16,23 +16,22 @@ interface Product {
     zipUrl: string;
 }
 
-interface Props {
+export default function ClientProductList({
+    products,
+    sellerName,
+    baseUrl,
+    onDeleted,
+}: {
     products: Product[];
     sellerName: string;
     baseUrl: string;
-}
-
-export default function ClientProductList({ products, sellerName, baseUrl }: Props) {
-    const [productList, setProductList] = useState(products);
+    onDeleted: () => void;
+}) {
     const sellerSlug = slugify(sellerName || "seller");
-
-    const handleDelete = (id: string) => {
-        setProductList(prev => prev.filter(p => p._id !== id));
-    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {productList.map(product => {
+            {products.map((product) => {
                 const shareUrl = `${baseUrl}/store/${sellerSlug}/${product._id}`;
 
                 return (
@@ -53,7 +52,7 @@ export default function ClientProductList({ products, sellerName, baseUrl }: Pro
                             <ShareLinkInput url={shareUrl} />
                         </div>
 
-                        <DeleteButton productId={product._id} onDeleted={() => handleDelete(product._id)} />
+                        <DeleteButton productId={product._id} onDeleted={onDeleted} />
                     </div>
                 );
             })}
