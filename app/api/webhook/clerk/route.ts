@@ -46,12 +46,16 @@ export async function POST(req: Request) {
             const existingUser = await User.findOne({ email });
 
             if (!existingUser) {
+                function slugify(name: string) {
+                    return name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+                }
+
                 await User.create({
                     clerkUserId: id,
                     email,
                     firstName: first_name || "",
                     lastName: last_name || "",
-
+                    slug: slugify(first_name || ""),
                 });
 
                 console.log("✅ New user created:", email);
