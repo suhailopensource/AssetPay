@@ -49,9 +49,17 @@ export default function CashfreeClient({
         cf.drop(containerRef.current, {
             components: ["order-details", "card", "upi"],
             onSuccess: async () => {
-                setHasPaid(true);
-
                 try {
+                    // ✅ Verify payment (this marks the order as paid in MongoDB)
+                    const verifyRes = await fetch(`/api/payments/verify?orderId=${orderIdRef.current}`);
+                    const verifyData = await verifyRes.json();
+
+                    if (!verifyRes.ok || !verifyData.paid) {
+                        console.error("Verification failed:", verifyData);
+                        return alert("Payment verification failed.");
+                    }
+
+                    // ✅ Then notify and send email
                     const notifyRes = await fetch("/api/payments/notify", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -66,12 +74,13 @@ export default function CashfreeClient({
                         console.warn("Notify failed:", notifyData);
                     }
 
-                    // ⛔ cf.destroy() doesn't exist, so:
-                    if (containerRef.current) {
-                        containerRef.current.innerHTML = ""; // manually remove Drop UI
-                    }
+                    // ✅ Mark payment complete
+                    setHasPaid(true);
+
+                    // ❌ No cf.destroy(), manually clear Drop UI
+                    containerRef.current.innerHTML = "";
                 } catch (err) {
-                    console.error("Notify error:", err);
+                    console.error("Payment success handling error:", err);
                 }
             },
             onFailure: (err: any) => {

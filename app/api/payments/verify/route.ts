@@ -1,3 +1,4 @@
+// app/api/payments/verify/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/lib/models/order";
@@ -19,9 +20,11 @@ export async function GET(req: Request) {
 
     const info = await cashfree.PGFetchOrder(orderId);
     if (info.data.order_status === "PAID") {
-        order.paid = true;
-        await order.save();
-        return NextResponse.json({ success: true });
+        if (!order.paid) {
+            order.paid = true;
+            await order.save();
+        }
+        return NextResponse.json({ success: true, paid: true });
     }
 
     return NextResponse.json({ paid: false });
