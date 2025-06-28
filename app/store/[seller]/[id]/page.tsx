@@ -1,18 +1,22 @@
-// app/store/[seller]/[id]/page.tsx
 import { connectDB } from "@/lib/db";
 import { Product } from "@/lib/models/product";
 import { notFound } from "next/navigation";
-
-interface Props {
-    params: { seller: string; id: string };
-}
+import CashfreeClient from "@/app/components/CashfreeClient";
 
 function slugify(name: string) {
     return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
 }
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({
+    params,
+    searchParams,
+}: {
+    params: { seller: string; id: string };
+    searchParams: { [key: string]: string };
+}) {
     const { seller, id } = params;
+    const orderId = searchParams.orderId || null;
+
     await connectDB();
 
     const product = await Product.findById(id).populate("seller");
@@ -28,14 +32,12 @@ export default async function ProductPage({ params }: Props) {
                 <p className="text-gray-600 mb-4">{product.description}</p>
                 <p className="text-blue-600 font-semibold mb-4">Price: ₹{product.price}</p>
 
-                <a
-                    href={product.zipUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-                >
-                    Download ZIP
-                </a>
+                <CashfreeClient
+                    productId={product._id.toString()}
+                    price={product.price}
+                    orderId={orderId}
+                    zipUrl={product.zipUrl}
+                />
             </div>
         </div>
     );

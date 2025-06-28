@@ -19,7 +19,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
             return NextResponse.json({ error: "Only sellers can delete products" }, { status: 403 });
         }
 
-        const product = await Product.findById(params.id);
+        const product = await Product.findById(params?.id);
         if (!product || product.seller.toString() !== user._id.toString()) {
             return NextResponse.json({ error: "Product not found or not owned by you" }, { status: 404 });
         }

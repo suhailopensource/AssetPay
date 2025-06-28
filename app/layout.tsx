@@ -26,6 +26,9 @@ export default function RootLayout({
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
+        <head>
+          <script src="https://sdk.cashfree.com/js/ui/2.0.0/cashfree.sandbox.js"></script>
+        </head>
         <body>{children}</body>
       </html>
     </ClerkProvider>
