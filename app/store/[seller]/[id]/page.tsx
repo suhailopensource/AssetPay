@@ -36,7 +36,7 @@ export default async function ProductPage({
                     productId={product._id.toString()}
                     price={product.price}
                     orderId={orderId}
-                    zipUrl={product.zipUrl}
+
                 />
             </div>
         </div>

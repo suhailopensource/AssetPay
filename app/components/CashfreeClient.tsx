@@ -15,7 +15,6 @@ export default function CashfreeClient({
     const [hasPaid, setHasPaid] = useState(false);
     const [buyerEmail, setBuyerEmail] = useState("");
     const containerRef = useRef<HTMLDivElement>(null);
-    const cashfreeRef = useRef<any>(null);
     const orderIdRef = useRef<string | null>(orderId);
 
     const startPayment = async () => {
@@ -46,7 +45,6 @@ export default function CashfreeClient({
         if (!sessionId || !window?.Cashfree || !containerRef.current) return;
 
         const cf = new window.Cashfree(sessionId);
-        cashfreeRef.current = cf;
 
         cf.drop(containerRef.current, {
             components: ["order-details", "card", "upi"],
@@ -68,7 +66,10 @@ export default function CashfreeClient({
                         console.warn("Notify failed:", notifyData);
                     }
 
-                    cf.destroy();
+                    // ⛔ cf.destroy() doesn't exist, so:
+                    if (containerRef.current) {
+                        containerRef.current.innerHTML = ""; // manually remove Drop UI
+                    }
                 } catch (err) {
                     console.error("Notify error:", err);
                 }
