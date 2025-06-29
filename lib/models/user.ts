@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     slug: { type: String, unique: true }, // ✅ add this
-    role: { type: String, enum: ["admin", "seller"], default: "seller" },
+    role: { type: String, enum: ["admin", "seller", "buyer"], default: "seller" },
     createdAt: { type: Date, default: Date.now },
 });
 

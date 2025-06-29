@@ -34,12 +34,12 @@ export default function ProductModal({ onCreated }: { onCreated: () => void }) {
 
     return (
         <div className="p-4 bg-white rounded shadow max-w-md w-full">
-            <h2 className="text-lg font-bold mb-4">Create New Product</h2>
+            <h2 className="text-lg font-bold mb-4 text-black">Create New Product</h2>
 
             <input
                 type="text"
                 placeholder="Product Name"
-                className="w-full border p-2 mb-2 rounded"
+                className="w-full border p-2 mb-2 rounded text-black"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
@@ -47,7 +47,7 @@ export default function ProductModal({ onCreated }: { onCreated: () => void }) {
             <input
                 type="number"
                 placeholder="Price"
-                className="w-full border p-2 mb-2 rounded"
+                className="w-full border p-2 mb-2 rounded text-black"
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
             />

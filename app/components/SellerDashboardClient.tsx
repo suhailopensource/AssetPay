@@ -20,6 +20,15 @@ interface Product {
     revenue: number;
 }
 
+interface Payment {
+    _id: string;
+    orderId: string;
+    product: { name: string };
+    buyerEmail: string;
+    amount: number;
+    createdAt: string;
+}
+
 export default function SellerDashboardClient({
     sellerName,
     baseUrl,
@@ -33,8 +42,9 @@ export default function SellerDashboardClient({
         totalRevenue: 0,
         totalBuyers: 0,
         totalProducts: 0,
-        netEarnings: 0
+        netEarnings: 0,
     });
+    const [payments, setPayments] = useState<Payment[]>([]);
 
     const fetchProducts = async () => {
         try {
@@ -59,9 +69,18 @@ export default function SellerDashboardClient({
         }
     };
 
+    const fetchPayments = async () => {
+        const res = await fetch("/api/seller/payments");
+        const data = await res.json();
+        if (data.success) {
+            setPayments(data.orders);
+        }
+    };
+
     useEffect(() => {
         fetchProducts();
         fetchStats();
+        fetchPayments();
     }, []);
 
     return (
@@ -70,6 +89,7 @@ export default function SellerDashboardClient({
                 onCreated={() => {
                     fetchProducts();
                     fetchStats();
+                    fetchPayments();
                 }}
             />
 
@@ -96,8 +116,42 @@ export default function SellerDashboardClient({
                         onDeleted={() => {
                             fetchProducts();
                             fetchStats();
+                            fetchPayments();
                         }}
                     />
+                )}
+            </div>
+
+            {/* Payment Log Table */}
+            <div className="mt-12">
+                <h2 className="text-xl font-semibold mb-2">🧾 Payment Logs</h2>
+                {payments.length === 0 ? (
+                    <p className="text-black">No payments yet.</p>
+                ) : (
+                    <div className=" text-black overflow-auto max-h-[400px] border rounded p-4 bg-white">
+                        <table className="min-w-full text-sm">
+                            <thead>
+                                <tr className="border-b text-left">
+                                    <th className="py-2 pr-4">Product</th>
+                                    <th className="py-2 pr-4">Buyer</th>
+                                    <th className="py-2 pr-4">Amount</th>
+                                    <th className="py-2 pr-4">Order ID</th>
+                                    <th className="py-2">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {payments.map((p) => (
+                                    <tr key={p._id} className="border-b">
+                                        <td className="py-2 pr-4">{p.product?.name}</td>
+                                        <td className="py-2 pr-4">{p.buyerEmail}</td>
+                                        <td className="py-2 pr-4">₹{p.amount}</td>
+                                        <td className="py-2 pr-4 text-xs">{p.orderId}</td>
+                                        <td className="py-2 text-xs">{new Date(p.createdAt).toLocaleString()}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
         </>
