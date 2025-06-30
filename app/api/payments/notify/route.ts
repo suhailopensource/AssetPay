@@ -25,6 +25,7 @@ export async function POST(req: Request) {
     <p><strong>Order:</strong> ${order.orderId}</p>
     <p><strong>Amount:</strong> ₹${order.amount}</p>
     <a href="${signedUrl}">Download File</a>
+     <p><strong>SIGN UP TO ACCESS YOUR PURCHASE IN THE DASHBOARD</strong>    <a href="http://localhost:3000/sign-up">Sign Up NOW</a></p>
     <hr/><h3>License:</h3>
     <p>Use for personal & commercial; no redistribution.</p>
   `;
