@@ -1,3 +1,4 @@
+// app/api/payments/create/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/lib/models/order";
@@ -47,7 +48,9 @@ export async function POST(req: Request) {
             orderId,
             product: product._id,
             buyerEmail,
+            amount: product.price,
             paid: false,
+            seller: product.seller._id, // ✅ ensure seller is saved
         });
 
         return NextResponse.json({

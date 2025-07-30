@@ -27,7 +27,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white">
       <nav className="flex items-center justify-between p-4 shadow-md bg-white">
-        <div className="text-2xl font-bold text-blue-600">DigitalStore</div>
+        <div className="text-2xl font-bold text-blue-600">AssetPay</div>
         <div className="space-x-4 flex items-center">
           {isSeller && (
             <Link href="/dashboard">
