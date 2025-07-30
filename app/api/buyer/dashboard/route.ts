@@ -17,18 +17,20 @@ export async function GET() {
         .populate("product")
         .lean();
 
-    const purchases = orders.map((o) => ({
-        orderId: o.orderId,
-        amount: o.amount,
-        purchasedAt: o.createdAt,
-        product: {
-            id: o.product._id,
-            name: o.product.name,
-            description: o.product.description,
-            price: o.product.price,
-            zipUrl: o.product.zipUrl,
-        },
-    }));
+    const purchases = orders
+        .filter((o) => o.product !== null) // Filter out orders with deleted/missing products
+        .map((o) => ({
+            orderId: o.orderId,
+            amount: o.amount,
+            purchasedAt: o.createdAt,
+            product: {
+                id: o.product._id,
+                name: o.product.name,
+                description: o.product.description,
+                price: o.product.price,
+                zipUrl: o.product.zipUrl,
+            },
+        }));
 
     return NextResponse.json({ success: true, purchases });
 }
